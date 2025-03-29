@@ -1,6 +1,6 @@
 import pygame
-from random import choice, randint
 import sys
+from random import choice, randint
 
 pygame.init()
 
@@ -81,10 +81,12 @@ class TetrisApp:
 
     def draw(self):
         self.screen.fill((0,0,0))
-        self.draw_tile(0, 0, (255, 255, 255))
-
         if self.current_piece:
-            for
+            for y, row in enumerate(self.current_piece):
+                for x, cell in enumerate(row):
+                    if cell:
+                        self.draw_tile(self.current_piece_x + x, self.current_piece_y + y,
+                                       self.current_piece_color)
 
             pygame.display.flip()
         
