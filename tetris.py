@@ -84,6 +84,12 @@ class TetrisApp:
         self.current_piece_color = TetrisApp.COLORS[color_index]
         self.current_piece_x = TetrisApp.BOARD_WIDTH // 2 - len(self.current_piece[0]) // 2
 
+    def rotate(self):
+        new_piece = [list(row) for row in zip(*self.current_piece)][::-1]
+        if not self.check_collision(self.current_piece_x, self.current_piece_y, new_piece):
+            self.current_piece = new_piece
+
+
     def handle_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -92,6 +98,7 @@ class TetrisApp:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     print("up")
+                    self.rotate()
                 elif event.key == pygame.K_LEFT:
                     print("left")
                     self.move(-1, 0)
