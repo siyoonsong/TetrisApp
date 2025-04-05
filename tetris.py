@@ -1,3 +1,5 @@
+from operator import truediv
+
 import pygame
 import sys
 from random import choice, randint
@@ -52,6 +54,29 @@ class TetrisApp:
         self.game_over = False
 
         self.new_piece()
+    def check_collision(self, new_x, new_y, piece):
+        for y, row in enumerate(piece):
+            for x, cell in enumerate(row):
+                if cell == 1:
+                    real_x = new_x + x
+                    real_y = new_y + y
+
+                    if (
+                        new_x < 0 or
+                        real_x >= TetrisApp.BOARD_WIDTH or
+                        real_y >= TetrisApp.BOARD_HEIGHT
+                    ):
+                        return True
+        return False
+
+    def move(self, dx, dy):
+        new_x = self.current_piece_x + dx
+        new_y = self.current_piece_y + dy
+        if not self.check_collision(new_x, new_y, self.current_piece):
+            self.current_piece_x = new_x
+            self.current_piece_y = new_y
+            return True
+        return False
 
     def new_piece(self):
         self.current_piece = choice(TetrisApp.SHAPES)
@@ -69,10 +94,13 @@ class TetrisApp:
                     print("up")
                 elif event.key == pygame.K_LEFT:
                     print("left")
+                    self.move(-1, 0)
                 elif event.key == pygame.K_RIGHT:
                     print("right")
+                    self.move(1, 0)
                 elif event.key == pygame.K_DOWN:
                     print("down")
+                    self.move(0, 1)
 
     def update(self):
         pass
