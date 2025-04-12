@@ -52,6 +52,8 @@ class TetrisApp:
         self.current_piece_x = 0
         self.current_piece_y = 0
         self.game_over = False
+        self.drop_time = pygame.time.get_ticks()
+        self.drop_speed = 500
 
         self.new_piece()
     def check_collision(self, new_x, new_y, piece):
@@ -84,10 +86,15 @@ class TetrisApp:
         self.current_piece_color = TetrisApp.COLORS[color_index]
         self.current_piece_x = TetrisApp.BOARD_WIDTH // 2 - len(self.current_piece[0]) // 2
 
+    def freeze_piece(self):
+        pass
+
     def rotate(self):
         new_piece = [list(row) for row in zip(*self.current_piece)][::-1]
         if not self.check_collision(self.current_piece_x, self.current_piece_y, new_piece):
             self.current_piece = new_piece
+            if not self.move(0, 1):
+                self.freeze_piece()
 
 
     def handle_input(self):
@@ -110,7 +117,10 @@ class TetrisApp:
                     self.move(0, 1)
 
     def update(self):
-        pass
+        current_time = pygame.time.get_ticks()
+        if current_time - self.drop_time > self.drop_speed:
+            self.move(0, 1)
+            self.drop_time = current_time
 
     def draw_tile(self, x, y, color):
         rect = pygame.rect.Rect(
@@ -139,6 +149,7 @@ class TetrisApp:
             self.handle_input()
             self.update()
             self.draw()
+            self.clock.tick(60)
 
 def main():
     app = TetrisApp()
